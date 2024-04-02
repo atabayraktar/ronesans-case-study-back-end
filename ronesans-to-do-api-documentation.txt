@@ -52,6 +52,14 @@ Endpoints:
 - Response: `{ "isDone": true, "deletedTodo": <deleted_todo> }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
 - Status codes: 200 on success, 400 on failure.
 
+-> PUT /todo/check/:id
+
+Description: Updates the isChecked status of a todo by its ID.
+URL parameters: id (the ID of the todo).
+Body parameters: isChecked (the new checked status of the todo).
+Response: { "isDone": true, "checkedTodo": <todo> } on success, { "isDone": false, "error": "<error_message>" } on failure.
+Status codes: 200 on success, 400 on failure.
+
 -> GET /todo/filter
 
 - Description: Filters todos for a specific user based on a date range.

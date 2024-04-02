@@ -12,6 +12,7 @@ const TodoSchema = new mongoose.Schema({
   name: String,
   time: Date,
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  isChecked: { type: Boolean, default: false },
 });
 
 const UserSchema = new mongoose.Schema({
@@ -111,6 +112,23 @@ app.delete("/todo/delete/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ isDone: false, error: error.message });
+  }
+});
+
+app.put("/todo/check/:id", async (req, res) => {
+  try {
+    const checkedTodo = await Todo.findByIdAndUpdate(
+      req.params.id,
+      {
+        isChecked: req.body.isChecked,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({ isDone: true, checkedTodo });
+  } catch (error) {
+    res.status(400).json({ isDone: false, error });
   }
 });
 
