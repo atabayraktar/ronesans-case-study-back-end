@@ -18,15 +18,13 @@ npm start
 
 Used Tech:
 
-```bash
-- "bcrypt": A library to help you hash passwords for secure storage.
-- "cors": Middleware that can be used to enable Cross-Origin Resource Sharing (CORS) in your Express.js application.
-- "dotenv": A zero-dependency module that loads environment variables from a `.env` file into `process.env`.
-- "express": A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
-- "joi": A powerful schema description language and data validator for JavaScript.
-- "mongodb": The official MongoDB driver for Node.js. It provides a high-level API on top of mongodb-core that is meant for end users.
-- "nodemon": A utility that automatically restarts your node application when file changes in the directory are detected.
-```
+- bcrypt: A library to help you hash passwords for secure storage.
+- cors: Middleware that can be used to enable Cross-Origin Resource Sharing (CORS) in your Express.js application.
+- dotenv: A zero-dependency module that loads environment variables from a `.env` file into `process.env`.
+- express: A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+- joi: A powerful schema description language and data validator for JavaScript.
+- mongodb: The official MongoDB driver for Node.js. It provides a high-level API on top of mongodb-core that is meant for end users.
+- nodemon: A utility that automatically restarts your node application when file changes in the directory are detected.
 
 For Your Information:
 
