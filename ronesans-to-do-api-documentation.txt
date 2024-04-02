@@ -1,0 +1,53 @@
+RONESANS TO-DO API Documentation
+
+Endpoints:
+
+-> POST /user/register
+
+- Description: Registers a new user.
+- Request body: `{ "username": "<username>", "password": "<password>" }`
+- Response: `{ "isDone": true, "message": "User created" }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
+
+-> POST /user/login
+
+- Description: Logs in a user.
+- Request body: `{ "username": "<username>", "password": "<password>" }`
+- Response: `{ "isDone": true, "foundUser": <found_user> }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
+
+-> GET /todo/getAll
+
+- Description: Fetches all todos for a specific user.
+- Request body: `{ "user_id": "<user_id>" }`
+- Response: `{ "isDone": true, "todos": [<todos>] }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
+
+-> GET /todo/getOne/:id
+
+- Description: Fetches a single todo by its ID.
+- URL parameters: `id` (the ID of the todo).
+- Response: `{ "isDone": true, "todo": <todo> }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
+
+-> POST /todo/create
+
+- Description: Creates a new todo.
+- Request body: `{ "name": "<name>", "time": "<time>", "user_id": "<user_id>" }`
+- Response: `{ "isDone": true, "newTodo": <new_todo> }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
+
+-> PUT /todo/update/:id
+
+- Description: Updates a todo by its ID.
+- URL parameters: `id` (the ID of the todo).
+- Request body: `{ "name": "<name>", "time": "<time>", "user_id": "<user_id>" }`
+- Response: `{ "isDone": true, "updatedTodo": <updated_todo> }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
+
+-> DELETE /todo/delete/:id
+
+- Description: Deletes a todo by its ID.
+- URL parameters: `id` (the ID of the todo).
+- Response: `{ "isDone": true, "deletedTodo": <deleted_todo> }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
