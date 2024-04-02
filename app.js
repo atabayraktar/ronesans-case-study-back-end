@@ -1,12 +1,12 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const Joi = require("joi");
 
-mongoose.connect(
-  "mongodb+srv://atabayraktar17:UCSQvP12SjCm37jj@ronesans-to-do.1tuyzpq.mongodb.net/?retryWrites=true&w=majority&appName=ronesans-to-do",
-  {}
-);
+mongoose.connect(process.env.MONGODB_URI, {});
 
 const TodoSchema = new mongoose.Schema({
   name: String,
@@ -14,9 +14,23 @@ const TodoSchema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
-const UserSchema = new mongoose.Schema({
-  username: String,
-  password: String,
+const userSchema = Joi.object({
+  username: Joi.string().max(10).required(),
+  password: Joi.string().max(10).required(),
+});
+
+UserSchema.pre("save", function (next) {
+  if (this.isModified("password") || this.isNew) {
+    bcrypt.hash(this.password, 10, (err, hashedPassword) => {
+      if (err) {
+        return next(err);
+      }
+      this.password = hashedPassword;
+      next();
+    });
+  } else {
+    return next();
+  }
 });
 
 const Todo = mongoose.model("Todo", TodoSchema);
@@ -108,6 +122,13 @@ app.get("/todo/filter", async (req, res) => {
 
 app.post("/user/register", async (req, res) => {
   try {
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+      return res
+        .status(400)
+        .json({ isDone: false, error: error.details[0].message });
+    }
+
     const newUser = new User({
       username: req.body.username,
       password: req.body.password,
@@ -121,12 +142,25 @@ app.post("/user/register", async (req, res) => {
 
 app.post("/user/login", async (req, res) => {
   try {
-    const foundUser = await User.findOne({
-      username: req.body.username,
-      password: req.body.password,
-    });
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+      return res
+        .status(400)
+        .json({ isDone: false, error: error.details[0].message });
+    }
+
+    const foundUser = await User.findOne({ username: req.body.username });
     if (foundUser) {
-      res.status(200).json({ isDone: true, foundUser });
+      bcrypt.compare(req.body.password, foundUser.password, (err, isMatch) => {
+        if (err) {
+          return res.status(500).json({ isDone: false, error: err });
+        }
+        if (isMatch) {
+          res.status(200).json({ isDone: true, foundUser });
+        } else {
+          res.status(400).json({ isDone: false, error: "Invalid password" });
+        }
+      });
     } else {
       throw new Error("User not found");
     }

@@ -51,3 +51,11 @@ Endpoints:
 - URL parameters: `id` (the ID of the todo).
 - Response: `{ "isDone": true, "deletedTodo": <deleted_todo> }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
 - Status codes: 200 on success, 400 on failure.
+
+-> GET /todo/filter
+
+- Description: Filters todos for a specific user based on a date range.
+- Query parameters: `startDate` (the start of the date range), `endDate` (the end of the date range).
+- Request body: `{ "user_id": "<user_id>" }`
+- Response: `{ "isDone": true, "filteredTodos": [<filtered_todos>] }` on success, `{ "isDone": false, "error": "<error_message>" }` on failure.
+- Status codes: 200 on success, 400 on failure.
