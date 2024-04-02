@@ -14,9 +14,9 @@ const TodoSchema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
-const userSchema = Joi.object({
-  username: Joi.string().max(10).required(),
-  password: Joi.string().max(10).required(),
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true, max: 10 },
+  password: { type: String, required: true, max: 10 },
 });
 
 UserSchema.pre("save", function (next) {
@@ -41,6 +41,15 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+
+const validateUser = (user) => {
+  const schema = Joi.object({
+    username: Joi.string().max(10).required(),
+    password: Joi.string().max(10).required(),
+  });
+
+  return schema.validate(user);
+};
 
 app.get("/todo/getAll", async (req, res) => {
   try {
@@ -94,10 +103,14 @@ app.put("/todo/update/:id", async (req, res) => {
 
 app.delete("/todo/delete/:id", async (req, res) => {
   try {
-    const deletedTodo = await Todo.findByIdAndRemove(req.params.id);
+    const deletedTodo = await Todo.findByIdAndDelete(req.params.id).exec();
+    if (!deletedTodo) {
+      return res.status(404).json({ isDone: false, error: "Todo not found" });
+    }
     res.status(200).json({ isDone: true, deletedTodo });
   } catch (error) {
-    res.status(400).json({ isDone: false, error });
+    console.error(error);
+    res.status(400).json({ isDone: false, error: error.message });
   }
 });
 
@@ -122,7 +135,7 @@ app.get("/todo/filter", async (req, res) => {
 
 app.post("/user/register", async (req, res) => {
   try {
-    const { error } = userSchema.validate(req.body);
+    const { error } = validateUser(req.body);
     if (error) {
       return res
         .status(400)
@@ -142,7 +155,7 @@ app.post("/user/register", async (req, res) => {
 
 app.post("/user/login", async (req, res) => {
   try {
-    const { error } = userSchema.validate(req.body);
+    const { error } = validateUser(req.body);
     if (error) {
       return res
         .status(400)
